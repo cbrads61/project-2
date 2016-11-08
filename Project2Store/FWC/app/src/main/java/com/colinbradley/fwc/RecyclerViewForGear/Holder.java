@@ -1,4 +1,4 @@
-package com.colinbradley.fwc.RecyclerView;
+package com.colinbradley.fwc.RecyclerViewForGear;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

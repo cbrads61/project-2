@@ -1,16 +1,11 @@
-package com.colinbradley.fwc.RecyclerView;
+package com.colinbradley.fwc.RecyclerViewForGear;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.colinbradley.fwc.DatabaseAndData.ImageConverter;
 import com.colinbradley.fwc.DatabaseAndData.FWCGear;
-import com.colinbradley.fwc.ItemDetailActivity;
-import com.colinbradley.fwc.MainActivity;
 import com.colinbradley.fwc.R;
 
 import java.util.List;
@@ -63,4 +58,10 @@ public class Adapter extends RecyclerView.Adapter<Holder>{
     public int getItemCount() {
         return mGearList.size();
     }
+
+    public void replaceData(List<FWCGear> newList){
+        mGearList = newList;
+        notifyDataSetChanged();
+    }
+
 }

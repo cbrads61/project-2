@@ -2,6 +2,9 @@ package com.colinbradley.fwc.DatabaseAndData;
 
 import android.graphics.Bitmap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by colinbradley on 11/5/16.
  */
@@ -13,8 +16,7 @@ public class FWCGear {
     private String description;
     private String type;
     private int price;
-    private int  imagePath;
-
+    private int imagePath;
 
 
     public FWCGear(int id, String name, int imagePath, String description, String type, int price) {
@@ -70,7 +72,7 @@ public class FWCGear {
         return imagePath;
     }
 
-    public void setImage(int  imagePath) {
+    public void setImage(int imagePath) {
         this.imagePath = imagePath;
     }
 }
