@@ -4,11 +4,16 @@ package com.colinbradley.fwc;
  * Created by colinbradley on 11/9/16.
  */
 
+import android.content.Context;
+
+import com.colinbradley.fwc.DatabaseAndData.DatabaseHelper;
 import com.colinbradley.fwc.DatabaseAndData.FWCGear;
+import com.colinbradley.fwc.DatabaseAndData.ShoppingCartSingleton;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -43,4 +48,24 @@ public class FWCUnitTest {
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void doesShoppingCartListAddItems(){
+        FWCGear gear1 = new FWCGear(1, "Name", 1234567890, "Description", "type", 999);
+        FWCGear gear2 = new FWCGear(2, "Name", 1234567890, "Description", "type", 999);
+        FWCGear gear3 = new FWCGear(3, "Name", 1234567890, "Description", "type", 999);
+
+        List<FWCGear> shoppinglist = new LinkedList<>();
+        shoppinglist = ShoppingCartSingleton.getInstance().getCart();
+
+        shoppinglist.add(gear1);
+        shoppinglist.add(gear2);
+        shoppinglist.add(gear3);
+
+        int expectedSize = 3;
+        int actualSize = shoppinglist.size();
+
+        assertEquals(expectedSize,actualSize);
+    }
+
 }

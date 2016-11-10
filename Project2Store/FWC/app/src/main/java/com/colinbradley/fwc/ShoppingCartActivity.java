@@ -45,7 +45,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
         //SET INFO AND ADAPTER TO RECYCLERVIEW
         mCAdapter = new CartAdapter(mShoppingCartList);
         mRecyclerView.setAdapter(mCAdapter);
-        
+
         mUpdateButton = (Button)findViewById(R.id.update_price_button);
         mTotalPrice = (TextView)findViewById(R.id.total_price);
         String newPrice = cart.returnNewPrice(cart.updateTotalPrice());
