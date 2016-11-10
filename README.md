@@ -31,11 +31,4 @@
 - The total price will not update when changing items from within the cart…Update Cart button was added as a work-around to fix the price. if the user does change items in the cart but does not use the Update button, then leaves the cart, when they return to the cart the price will be updated 
 - After a search is activated the list will not regenerate if the search bar is cleared…added function to recognize “all” as a search for all items in database to re-pull the list.
 
-## Necessary Deliverables
-
-- A final, working version of your app with a polished UI - be creative!
-- Your readme.md file
-- Your user stories document (or a link to a google spreadsheet if you prefer - make sure to set sharing settings correctly!)
-- Images of or link to your paper prototypes
-- A pull request from your fork back to the original repo, including frequent commits dating back to the **very beginning** of the project - commit early, commit often!
 
