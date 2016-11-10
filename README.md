@@ -27,7 +27,7 @@
 - Update Cart button will update the total price at the bottom of the cart to reflect any changes the user has made while within the cart
 - Checkout button notifies user that purchase has been complete and clears out the shopping cart list
 
-### **__Posible Bugs__**
+### **__Known Bugs__**
 - The total price will not update when changing items from within the cart…Update Cart button was added as a work-around to fix the price. if the user does change items in the cart but does not use the Update button, then leaves the cart, when they return to the cart the price will be updated 
 - After a search is activated the list will not regenerate if the search bar is cleared…added function to recognize “all” as a search for all items in database to re-pull the list.
 
