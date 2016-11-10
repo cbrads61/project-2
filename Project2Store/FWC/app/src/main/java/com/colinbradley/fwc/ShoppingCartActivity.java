@@ -33,6 +33,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //SET UP RECYCLERVIEW LAYOUT
         mRecyclerView = (RecyclerView)findViewById(R.id.shopping_cart_rv);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false));
@@ -41,10 +42,10 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
         mShoppingCartList = cart.getCart();
 
+        //SET INFO AND ADAPTER TO RECYCLERVIEW
         mCAdapter = new CartAdapter(mShoppingCartList);
         mRecyclerView.setAdapter(mCAdapter);
-
-
+        
         mUpdateButton = (Button)findViewById(R.id.update_price_button);
         mTotalPrice = (TextView)findViewById(R.id.total_price);
         String newPrice = cart.returnNewPrice(cart.updateTotalPrice());
@@ -63,7 +64,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
             }
         });
 
-        //Update Cart to have the total price reflect any changes made to the cart
+        //UPDATE CART TO HAVE THE TOTAL PRICE REFLECT ANY CHANGES MADE TO THE CART WHILE STILL IN THE CART
         mUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

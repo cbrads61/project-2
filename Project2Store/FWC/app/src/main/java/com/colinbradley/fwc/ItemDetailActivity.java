@@ -38,7 +38,7 @@ public class ItemDetailActivity extends AppCompatActivity {
         TextView price = (TextView)findViewById(R.id.itemprice);
         ImageView gearImage = (ImageView)findViewById(R.id.picture);
 
-        //get the int for PRICE from db and make a string
+        //GET THE INT FOR PRICE FROM DATABASE AND MAKE A STRING
         int priceAsInt = selectedGear.getPrice();
         String priceAsString = Integer.toString(priceAsInt);
 

@@ -26,7 +26,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
 
-    //Constants for Database
+    //CONSTANTS FOR DATABASE
     public static final int DATABASE_VERSION = 7;
     public static final String DATABASE_NAME = "fwcgear.db";
 
@@ -76,17 +76,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         onCreate(db);
     }
 
-    private ContentValues values(String name, int imagePath, String description,
-                                 String type, int price){
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_NAME, name);
-        contentValues.put(COL_IMAGE, imagePath);
-        contentValues.put(COL_DESCRIPTION, description);
-        contentValues.put(COL_TYPE, type);
-        contentValues.put(COL_PRICE, price);
-        return contentValues;
-    }
-
+    // GET CONTENTVALUES FOR AND ADD NEW GEAR TO DB
     public void addGear(FWCGear gear){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -99,7 +89,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.close();
     }
 
-    //Gather List from Database
+    //GATHER LIST FROM DATABASE
     public List<FWCGear> getAllAsList(){
         SQLiteDatabase db = getReadableDatabase();
 
@@ -122,7 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return gearList;
     }
 
-    //Get individual item
+    //GET INDIVIDUAL ITEM BY ID
     public FWCGear getItembyID(int id) {
         SQLiteDatabase db = getReadableDatabase();
 
@@ -141,23 +131,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         }
         return null;
     }
-
-    private FWCGear getGearFromCursor(Cursor cursor){
-
-        int id = cursor.getInt(cursor.getColumnIndex(COL_ID));
-        String name = cursor.getString(cursor.getColumnIndex(COL_NAME));
-        int imagePath = cursor.getInt(cursor.getColumnIndex(COL_IMAGE));
-        String description = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
-        String type = cursor.getString(cursor.getColumnIndex(COL_TYPE));
-        int price = cursor.getInt(cursor.getColumnIndex(COL_PRICE));
-
-        FWCGear item = new FWCGear(id, name, imagePath, description, type, price);
-
-        return item;
-    }
-
-
-
 
     ///CHECKS IF SEARCH IS A NUMBER OR STRING TO DECIDE WHAT
     // QUERY TO USE OR IF USER TYPES "all" IT WILL SHOW ALL ITEMS FROM THE DB AGAIN
@@ -191,13 +164,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
         if (cursor.moveToFirst()){
             while (!cursor.isAfterLast()){
-                FWCGear g = new FWCGear(cursor.getInt(cursor.getColumnIndex(COL_ID)),
-                        cursor.getString(cursor.getColumnIndex(COL_NAME)),
-                        cursor.getInt(cursor.getColumnIndex(COL_IMAGE)),
-                        cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION)),
-                        cursor.getString(cursor.getColumnIndex(COL_TYPE)),
-                        cursor.getInt(cursor.getColumnIndex(COL_PRICE)));
-                gearSearchByType.add(g);
+                FWCGear gear = getGearFromCursor(cursor);
+
+                gearSearchByType.add(gear);
                 cursor.moveToNext();
             }
         }
@@ -219,13 +188,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
             if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
-                    FWCGear g = new FWCGear(cursor.getInt(cursor.getColumnIndex(COL_ID)),
-                            cursor.getString(cursor.getColumnIndex(COL_NAME)),
-                            cursor.getInt(cursor.getColumnIndex(COL_IMAGE)),
-                            cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION)),
-                            cursor.getString(cursor.getColumnIndex(COL_TYPE)),
-                            cursor.getInt(cursor.getColumnIndex(COL_PRICE)));
-                    gearSearchByPriceList.add(g);
+                    FWCGear gear = getGearFromCursor(cursor);
+
+                    gearSearchByPriceList.add(gear);
                     cursor.moveToNext();
                 }
             }
@@ -246,19 +211,31 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
         if (cursor.moveToFirst()){
             while (!cursor.isAfterLast()){
-                FWCGear g = new FWCGear(cursor.getInt(cursor.getColumnIndex(COL_ID)), //ID
-                        cursor.getString(cursor.getColumnIndex(COL_NAME)), //NAME
-                        cursor.getInt(cursor.getColumnIndex(COL_IMAGE)), //Image
-                        cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION)),
-                        cursor.getString(cursor.getColumnIndex(COL_TYPE)),
-                        cursor.getInt(cursor.getColumnIndex(COL_PRICE)));
-                gearSearchByName.add(g);
+                FWCGear gear = getGearFromCursor(cursor);
+
+                gearSearchByName.add(gear);
                 cursor.moveToNext();
             }
         }
         return gearSearchByName;
     }
-//populate data
+
+    //GATHERS INFO FROM CURSOR (SEPARATED TO CLEAN UP CODE A BIT INSTEAD OF HAVING IT INSIDE THE 5 METHODS ABOVE)
+    private FWCGear getGearFromCursor(Cursor cursor){
+
+        int id = cursor.getInt(cursor.getColumnIndex(COL_ID));
+        String name = cursor.getString(cursor.getColumnIndex(COL_NAME));
+        int imagePath = cursor.getInt(cursor.getColumnIndex(COL_IMAGE));
+        String description = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
+        String type = cursor.getString(cursor.getColumnIndex(COL_TYPE));
+        int price = cursor.getInt(cursor.getColumnIndex(COL_PRICE));
+
+        FWCGear item = new FWCGear(id, name, imagePath, description, type, price);
+
+        return item;
+    }
+
+//POPULATE DATABASE IF NEEDED
     public void populateGearTable(){
         SQLiteDatabase db = getWritableDatabase();
         addGear(new FWCGear(1,"Eon Tracer Mask", R.drawable.helmet, "\"It's too much… Turn it off… Let me out!\" —RECORD-449-CHASM-6263", "Helmet", 120));

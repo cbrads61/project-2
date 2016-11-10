@@ -48,7 +48,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartHolder> {
 
         holder.mPrice.setText(priceAsString);
 
-        //Adds another of the same item in the cart
+        //ADDS ANOTHER OF THE SAME ITEM TO CART
         holder.mAddOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,7 +58,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartHolder> {
             }
         });
 
-        //Removes item from the cart
+        //REMOVES ITEM FROM CART
         holder.mRemoveOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

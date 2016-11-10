@@ -25,11 +25,9 @@ import com.colinbradley.fwc.RecyclerViewForGear.Adapter;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Adapter.OnItemSelectedListener{
-    private DatabaseHelper mHelper;
     private List<FWCGear> mGearList;
     private Adapter mAdapter;
     private RecyclerView mRecyclerView;
-    TextView mTotalPrice;
 
 
     @Override
@@ -39,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.OnItemSel
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //SETS UP RECYCLERVIEW LAYOUT
         mRecyclerView = (RecyclerView)findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false));
@@ -59,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.OnItemSel
         }
 
 
+        //SET INFO AND ADAPTER TO RECYCLERVIEW
         mGearList = db.getAllAsList();
         mAdapter = new Adapter(mGearList,this);
         mRecyclerView.setAdapter(mAdapter);
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.OnItemSel
         super.onResume();
     }
 
-    //creates search bar
+    //CREATES SEARCH BAR
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.OnItemSel
         return true;
     }
 
+    //SENDS ID TO ITEMDETAILACTIVITY WHEN CLICKED
     @Override
     public void onItemSelected(int id) {
         Intent intent = new Intent(this, ItemDetailActivity.class);

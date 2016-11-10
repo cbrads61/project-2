@@ -9,9 +9,8 @@ import java.util.LinkedList;
 /**
  * Created by colinbradley on 11/7/16.
  */
-
-//Created this singleton to keep the shopping cart correct
-    //also holds methods that calculates total price of the cart
+//CREATED THIS SINGLETON TO KEEP THE SHOPPING CART CORRECT
+    //ALSO HOLDS METHODS THAT CALCULATES TOTAL PRICE OF THE CART
 
 public class ShoppingCartSingleton {
     private static ShoppingCartSingleton cart = null;
