@@ -19,11 +19,9 @@ public class Adapter extends RecyclerView.Adapter<Holder>{
     private List<FWCGear> mGearList;
     private OnItemSelectedListener mOnItemSelectedListener;
 
-
     public interface OnItemSelectedListener{
         void onItemSelected(int id);
     }
-
 
     public Adapter(List<FWCGear> gearList, OnItemSelectedListener onItemSelectedListener){
         mGearList = gearList;
@@ -32,7 +30,6 @@ public class Adapter extends RecyclerView.Adapter<Holder>{
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_layout, parent, false);
         return new Holder(v);
@@ -63,5 +60,4 @@ public class Adapter extends RecyclerView.Adapter<Holder>{
         mGearList = newList;
         notifyDataSetChanged();
     }
-
 }

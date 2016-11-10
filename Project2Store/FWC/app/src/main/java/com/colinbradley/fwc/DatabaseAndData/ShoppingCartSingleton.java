@@ -10,13 +10,15 @@ import java.util.LinkedList;
  * Created by colinbradley on 11/7/16.
  */
 
+//Created this singleton to keep the shopping cart correct
+    //also holds methods that calculates total price of the cart
+
 public class ShoppingCartSingleton {
     private static ShoppingCartSingleton cart = null;
     private static LinkedList<FWCGear> shoppingList;
 
     private ShoppingCartSingleton(){
         shoppingList = new LinkedList<>();
-
     }
 
     public static ShoppingCartSingleton getInstance(){
@@ -44,7 +46,6 @@ public class ShoppingCartSingleton {
         returnNewPrice(priceAsString);
 
         return priceAsString;
-
     }
 
     public int getTotalPrice(){
@@ -60,9 +61,4 @@ public class ShoppingCartSingleton {
     public String returnNewPrice(String priceAsString){
         return priceAsString;
     }
-
-
-
-
-
 }

@@ -21,7 +21,6 @@ public class CartHolder extends RecyclerView.ViewHolder{
 
     public CartHolder(View itemView) {
         super(itemView);
-
         mName = (TextView)itemView.findViewById(R.id.gear_name_cart);
         mType = (TextView)itemView.findViewById(R.id.gear_type_cart);
         mImage = (ImageView)itemView.findViewById(R.id.gear_photo_cart);
@@ -29,6 +28,5 @@ public class CartHolder extends RecyclerView.ViewHolder{
         mRemoveOne = (Button)itemView.findViewById(R.id.remove1button);
         mPrice = (TextView)itemView.findViewById(R.id.price_cart);
         mRootView = itemView;
-
     }
 }

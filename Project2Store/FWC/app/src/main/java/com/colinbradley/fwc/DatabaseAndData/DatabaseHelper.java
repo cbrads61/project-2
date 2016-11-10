@@ -9,11 +9,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.widget.Toast;
 
 import com.colinbradley.fwc.MainActivity;
 import com.colinbradley.fwc.R;
 
 import java.io.ByteArrayOutputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,8 +26,9 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
 
-    public static final int DATABASE_VERSION = 4;
-    public static final String DATABASE_NAME = "fwctest6.db";
+    //Constants for Database
+    public static final int DATABASE_VERSION = 7;
+    public static final String DATABASE_NAME = "fwcgear.db";
 
     public static final String TABLE_NAME = "fwctable";
 
@@ -62,19 +65,15 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE);
-
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL(DROP_FWC_TABLE);
         onCreate(db);
-
     }
 
     private ContentValues values(String name, int imagePath, String description,
@@ -88,9 +87,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return contentValues;
     }
 
-
-
-
     public void addGear(FWCGear gear){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -103,15 +99,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.close();
     }
 
-    public void removeGear(FWCGear gear){
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_NAME, COL_ID + " = ?",
-                new String[]{String.valueOf(gear.getId())});
-        db.close();
-    }
-
-
-
+    //Gather List from Database
     public List<FWCGear> getAllAsList(){
         SQLiteDatabase db = getReadableDatabase();
 
@@ -134,19 +122,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return gearList;
     }
 
-    private FWCGear getGearFromCursor(Cursor cursor){
-        int id = cursor.getInt(cursor.getColumnIndex(COL_ID));
-        String name = cursor.getString(cursor.getColumnIndex(COL_NAME));
-        int imagePath = cursor.getInt(cursor.getColumnIndex(COL_IMAGE));
-        String description = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
-        String type = cursor.getString(cursor.getColumnIndex(COL_TYPE));
-        int price = cursor.getInt(cursor.getColumnIndex(COL_PRICE));
-
-        FWCGear item = new FWCGear(id, name, imagePath, description, type, price);
-
-        return item;
-    }
-
+    //Get individual item
     public FWCGear getItembyID(int id) {
         SQLiteDatabase db = getReadableDatabase();
 
@@ -160,44 +136,103 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
         if (cursor.moveToFirst()) {
 
-            String name = cursor.getString(cursor.getColumnIndex(COL_NAME));
-            int imagePath = cursor.getInt(cursor.getColumnIndex(COL_IMAGE));
-            String description = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
-            String type = cursor.getString(cursor.getColumnIndex(COL_TYPE));
-            int price = cursor.getInt(cursor.getColumnIndex(COL_PRICE));
-            return new FWCGear(id, name, imagePath, description, type, price);
+            FWCGear gear = getGearFromCursor(cursor);
+            return gear;
         }
         return null;
     }
 
-    public List<FWCGear> searchPriceCheaperThan(String query){
+    private FWCGear getGearFromCursor(Cursor cursor){
+
+        int id = cursor.getInt(cursor.getColumnIndex(COL_ID));
+        String name = cursor.getString(cursor.getColumnIndex(COL_NAME));
+        int imagePath = cursor.getInt(cursor.getColumnIndex(COL_IMAGE));
+        String description = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION));
+        String type = cursor.getString(cursor.getColumnIndex(COL_TYPE));
+        int price = cursor.getInt(cursor.getColumnIndex(COL_PRICE));
+
+        FWCGear item = new FWCGear(id, name, imagePath, description, type, price);
+
+        return item;
+    }
+
+
+
+
+    ///CHECKS IF SEARCH IS A NUMBER OR STRING TO DECIDE WHAT
+    // QUERY TO USE OR IF USER TYPES "all" IT WILL SHOW ALL ITEMS FROM THE DB AGAIN
+    public List<FWCGear> searchGear(String query){
+        if (query.matches(".*\\d.*")){
+            return searchPriceCheaperThan(query);
+        }
+        else{
+            if (query.equalsIgnoreCase("all")){
+                return getAllAsList();
+            }
+            else if (query.startsWith("is:")){
+                return searchType(query.substring(3));
+            }
+            else {
+                return searchByName(query);
+            }
+        }
+    }
+
+    //SEARCH FOR ITEMS BY TYPE (NEEDS "is:" PREFIX IN QUERY)
+    public List<FWCGear> searchType(String query){
         SQLiteDatabase db = getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_NAME,
                 NUMBERS_COLUMNS,
-                COL_PRICE + " < ?",
-                new String[]{query},
-                null, null,
-                COL_PRICE,
-                null);
-        List<FWCGear> gearSearchByPriceList = new LinkedList<>();
+                COL_TYPE + " LIKE ?",
+                new String[]{"%" + query + "%"},
+                null, null, null, null);
+        List<FWCGear> gearSearchByType = new LinkedList<>();
 
         if (cursor.moveToFirst()){
             while (!cursor.isAfterLast()){
-                FWCGear g = new FWCGear(cursor.getInt(cursor.getColumnIndex(COL_ID)), //ID
-                        cursor.getString(cursor.getColumnIndex(COL_NAME)), //NAME
-                        cursor.getInt(cursor.getColumnIndex(COL_IMAGE)), //Image
+                FWCGear g = new FWCGear(cursor.getInt(cursor.getColumnIndex(COL_ID)),
+                        cursor.getString(cursor.getColumnIndex(COL_NAME)),
+                        cursor.getInt(cursor.getColumnIndex(COL_IMAGE)),
                         cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION)),
                         cursor.getString(cursor.getColumnIndex(COL_TYPE)),
                         cursor.getInt(cursor.getColumnIndex(COL_PRICE)));
-                gearSearchByPriceList.add(g);
+                gearSearchByType.add(g);
                 cursor.moveToNext();
             }
         }
-        return gearSearchByPriceList;
+        return gearSearchByType;
     }
 
+    //SEARCH FOR ITEMS LESS EXPENSIVE THAN INT INPUTED
+    public List<FWCGear> searchPriceCheaperThan(String query) {
+        SQLiteDatabase db = getReadableDatabase();
 
+            Cursor cursor = db.query(TABLE_NAME,
+                    NUMBERS_COLUMNS,
+                    COL_PRICE + " <= ?",
+                    new String[]{query},
+                    null, null,
+                    COL_PRICE,
+                    null);
+            List<FWCGear> gearSearchByPriceList = new LinkedList<>();
+
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    FWCGear g = new FWCGear(cursor.getInt(cursor.getColumnIndex(COL_ID)),
+                            cursor.getString(cursor.getColumnIndex(COL_NAME)),
+                            cursor.getInt(cursor.getColumnIndex(COL_IMAGE)),
+                            cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION)),
+                            cursor.getString(cursor.getColumnIndex(COL_TYPE)),
+                            cursor.getInt(cursor.getColumnIndex(COL_PRICE)));
+                    gearSearchByPriceList.add(g);
+                    cursor.moveToNext();
+                }
+            }
+            return gearSearchByPriceList;
+    }
+
+    //SEARCH FOR ITEMS BY NAME AND WILL GET ANY ITERATION OF THE QUERY
     public List<FWCGear> searchByName(String query){
         SQLiteDatabase db = getWritableDatabase();
 
@@ -223,10 +258,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         }
         return gearSearchByName;
     }
-
+//populate data
     public void populateGearTable(){
-        SQLiteDatabase db = getReadableDatabase();
-        removeold();
+        SQLiteDatabase db = getWritableDatabase();
         addGear(new FWCGear(1,"Eon Tracer Mask", R.drawable.helmet, "\"It's too much… Turn it off… Let me out!\" —RECORD-449-CHASM-6263", "Helmet", 120));
         addGear(new FWCGear(2,"Eon Tracer Gloves", R.drawable.gloves, "\"I can never find the beginning, the place where the path forks.\" —RECORD 448-CHASM-6808", "Gauntlet", 70));
         addGear(new FWCGear(3,"Eon Tracer Vest", R.drawable.chest, "\"Eternities streamed past me, like shooting stars…\" —RECORD-449-CHASM-6887", "Chest Armor", 120));
@@ -247,28 +281,5 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         addGear(new FWCGear(18,"Carthage 0100", R.drawable.carthage0100, "Equip this shader to change the color of your armor.", "Shader", 180));
         addGear(new FWCGear(19,"Tyre 4770", R.drawable.tyre4770, "Equip this shader to change the color of your armor.", "Shader", 180));
         addGear(new FWCGear(20,"Nineveh 8611", R.drawable.nineveh8611, "Equip this shader to change the color of your armor.", "Shader", 180));
-    }
-    //check before using again
-    public void removeold(){
-        removeGear(getItembyID(1));
-        removeGear(getItembyID(2));
-        removeGear(getItembyID(3));
-        removeGear(getItembyID(4));
-        removeGear(getItembyID(5));
-        removeGear(getItembyID(6));
-        removeGear(getItembyID(7));
-        removeGear(getItembyID(8));
-        removeGear(getItembyID(9));
-        removeGear(getItembyID(10));
-        removeGear(getItembyID(11));
-        removeGear(getItembyID(12));
-        removeGear(getItembyID(13));
-        removeGear(getItembyID(14));
-        removeGear(getItembyID(15));
-        removeGear(getItembyID(16));
-        removeGear(getItembyID(17));
-        removeGear(getItembyID(18));
-        removeGear(getItembyID(19));
-        removeGear(getItembyID(20));
     }
 }

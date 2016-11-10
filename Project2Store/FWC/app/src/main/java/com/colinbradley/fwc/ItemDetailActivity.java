@@ -17,20 +17,12 @@ public class ItemDetailActivity extends AppCompatActivity {
 
     public static final String ID_KEY = "idkey";
 
-    private int mSelectedGear;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-
-
 
         int selectedItemID = getIntent().getIntExtra(ID_KEY, -1);
         if (selectedItemID == -1){
@@ -55,8 +47,6 @@ public class ItemDetailActivity extends AppCompatActivity {
         description.setText(selectedGear.getDescription());
         price.setText(priceAsString);
         gearImage.setBackgroundResource(selectedGear.getImage());
-
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

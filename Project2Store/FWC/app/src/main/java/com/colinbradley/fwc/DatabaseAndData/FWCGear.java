@@ -18,7 +18,6 @@ public class FWCGear {
     private int price;
     private int imagePath;
 
-
     public FWCGear(int id, String name, int imagePath, String description, String type, int price) {
         this.id = id;
         this.name = name;

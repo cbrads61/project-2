@@ -24,7 +24,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartHolder> {
 
     private List<FWCGear> mShoppingCartList;
 
-
     public CartAdapter(List<FWCGear> mShoppingCartList) {
         this.mShoppingCartList = mShoppingCartList;
     }
@@ -49,32 +48,26 @@ public class CartAdapter extends RecyclerView.Adapter<CartHolder> {
 
         holder.mPrice.setText(priceAsString);
 
-
+        //Adds another of the same item in the cart
         holder.mAddOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ShoppingCartSingleton cart = ShoppingCartSingleton.getInstance();
                 cart.addGear(currentItem);
                 notifyDataSetChanged();
-                cart.updateTotalPrice();
             }
         });
 
+        //Removes item from the cart
         holder.mRemoveOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 ShoppingCartSingleton cart = ShoppingCartSingleton.getInstance();
                 cart.removeGear(currentItem);
                 notifyDataSetChanged();
-                cart.updateTotalPrice();
-
             }
         });
-
-
     }
-
 
     @Override
     public int getItemCount() {

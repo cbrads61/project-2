@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -51,16 +52,16 @@ public class MainActivity extends AppCompatActivity implements Adapter.OnItemSel
             }
         });
 
-
-
-
         DatabaseHelper db = DatabaseHelper.getInstance(this);
-        db.populateGearTable();
+
+        if (db.getAllAsList().size() == 0) {
+            db.populateGearTable();
+        }
+
 
         mGearList = db.getAllAsList();
         mAdapter = new Adapter(mGearList,this);
         mRecyclerView.setAdapter(mAdapter);
-
     }
 
     @Override
@@ -72,12 +73,9 @@ public class MainActivity extends AppCompatActivity implements Adapter.OnItemSel
     private void handleIntent(Intent intent){
         if (Intent.ACTION_SEARCH.equals(intent.getAction())){
             String query = intent.getStringExtra(SearchManager.QUERY);
-            List<FWCGear> cheaperThan = DatabaseHelper.getInstance(this).searchPriceCheaperThan(query);
-            List<FWCGear> searchName = DatabaseHelper.getInstance(this).searchByName(query);
 
-            //mAdapter.replaceData(searchName);
-            mAdapter.replaceData(cheaperThan);
-
+            List<FWCGear> searchGear = DatabaseHelper.getInstance(this).searchGear(query);
+            mAdapter.replaceData(searchGear);
         }
     }
 
@@ -86,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.OnItemSel
         super.onResume();
     }
 
+    //creates search bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -96,28 +95,11 @@ public class MainActivity extends AppCompatActivity implements Adapter.OnItemSel
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
         return true;
     }
-/*
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-    */
 
     @Override
     public void onItemSelected(int id) {
         Intent intent = new Intent(this, ItemDetailActivity.class);
         intent.putExtra(ItemDetailActivity.ID_KEY, id);
         startActivity(intent);
-
     }
 }

@@ -47,12 +47,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
         mUpdateButton = (Button)findViewById(R.id.update_price_button);
         mTotalPrice = (TextView)findViewById(R.id.total_price);
-        //cart.updateTotalPrice();
         String newPrice = cart.returnNewPrice(cart.updateTotalPrice());
         mTotalPrice.setText(newPrice);
-
-
-
 
                 FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -62,13 +58,12 @@ public class ShoppingCartActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
                 mShoppingCartList.clear();
                 mCAdapter.notifyDataSetChanged();
-                //cart.updateTotalPrice();
                 String newPrice = cart.returnNewPrice(cart.updateTotalPrice());
                 mTotalPrice.setText(newPrice);
-
             }
         });
 
+        //Update Cart to have the total price reflect any changes made to the cart
         mUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,48 +71,5 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 mTotalPrice.setText(newPrice);
             }
         });
-
-        //updatePrice();
-
     }
-
-    public void updatePrice(){
-        ShoppingCartSingleton cart = ShoppingCartSingleton.getInstance();
-        String newPrice = cart.returnNewPrice(cart.updateTotalPrice());
-        mTotalPrice.setText(newPrice);
-        checkForChanges();
-    }
-
-    public void checkForChanges(){
-        ShoppingCartSingleton cart = ShoppingCartSingleton.getInstance();
-        LinkedList<FWCGear> tempList;
-        tempList = cart.getCart();
-
-        if (mShoppingCartList.size() == tempList.size()){
-
-        }else {
-            updatePrice();
-        }
-
-    }
-
-/*
-    public void updateTotalPrice(){
-        int totalPrice = getTotalPrice();
-        String priceAsString = Integer.toString(totalPrice);
-
-        mTotalPrice.setText(priceAsString);
-    }
-
-    public int getTotalPrice(){
-        int i;
-        int add = 0;
-        for (i = 0; i < mShoppingCartList.size(); i++){
-            int itemPrice = mShoppingCartList.get(i).getPrice();
-            add = add + itemPrice;
-        }
-        return add;
-    }
-    */
-
 }

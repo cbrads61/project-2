@@ -19,12 +19,9 @@ public class Holder extends RecyclerView.ViewHolder {
 
     public Holder(View itemView) {
         super(itemView);
-
         mName = (TextView)itemView.findViewById(R.id.gear_name);
         mType = (TextView)itemView.findViewById(R.id.gear_type);
         mImage = (ImageView) itemView.findViewById(R.id.gear_photo);
         mRootView = itemView;
-
     }
-
 }
