@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.colinbradley.fwc.DatabaseAndData.DatabaseHelper;
 import com.colinbradley.fwc.DatabaseAndData.FWCGear;
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements Adapter.OnItemSel
     private List<FWCGear> mGearList;
     private Adapter mAdapter;
     private RecyclerView mRecyclerView;
+    private AsyncTask<Void,Void,Void> mTask;
 
 
     @Override
@@ -51,17 +54,37 @@ public class MainActivity extends AppCompatActivity implements Adapter.OnItemSel
             }
         });
 
-        DatabaseHelper db = DatabaseHelper.getInstance(this);
+        //** METHOD TO START TASK TO CHECK/ADD ITEMS TO DB***************
+        fillDataBase();
 
-        if (db.getAllAsList().size() == 0) {
-            db.populateGearTable();
+    }
+
+    public void fillDataBase(){
+        final DatabaseHelper db = DatabaseHelper.getInstance(this);
+
+        if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING){
+            Toast.makeText(this, "Still adding data to the database. Please wait",
+                    Toast.LENGTH_LONG).show();
+        }else {
+            mTask = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    if (db.getAllAsList().size() == 0) {
+                        db.populateGearTable();
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    mGearList = db.getAllAsList();
+                    mAdapter = new Adapter(mGearList,MainActivity.this);
+                    mRecyclerView.setAdapter(mAdapter);
+                }
+            };
+        mTask.execute();
         }
-
-
-        //SET INFO AND ADAPTER TO RECYCLERVIEW
-        mGearList = db.getAllAsList();
-        mAdapter = new Adapter(mGearList,this);
-        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override

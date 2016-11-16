@@ -27,7 +27,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper{
 
     //CONSTANTS FOR DATABASE
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 8;
     public static final String DATABASE_NAME = "fwcgear.db";
 
     public static final String TABLE_NAME = "fwctable";
